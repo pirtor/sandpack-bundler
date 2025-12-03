@@ -7,6 +7,7 @@ import { FnIsFile, FnReadFile, getParentDirectories, isFile } from './utils/fs';
 import { extractModuleSpecifierParts } from './utils/module-specifier';
 import { ProcessedPackageJSON, processPackageJSON } from './utils/pkg-json';
 import { ProcessedTSConfig, getPotentialPathsFromTSConfig, processTSConfig } from './utils/tsconfig';
+import { tryToResolvePreBuilt } from './utils/resolve-prebuilt';
 
 export type ResolverCache = Map<string, any>;
 
@@ -276,6 +277,9 @@ export const resolver = gensync<(moduleSpecifier: string, inputOpts: IResolveOpt
   const modulePath = yield* resolveModule(normalizedSpecifier, opts);
 
   if (modulePath[0] !== '/') {
+    const resolveId = yield* tryToResolvePreBuilt(opts, normalizedSpecifier);
+    if (resolveId) return resolveId;
+
     // This isn't a node module, we can attempt to resolve using a tsconfig/jsconfig
     if (!opts.filename.includes('/node_modules')) {
       const parsedTSConfig = yield* getTSConfig(opts);

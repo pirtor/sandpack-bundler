@@ -28,6 +28,7 @@ export class ModuleRegistry {
 
     const sortedDeps = sortObj(deps);
     logger.debug('Fetching manifest', sortedDeps);
+    if (!Object.keys(sortedDeps).length) return;
     this.manifest = await fetchManifest(sortedDeps);
     logger.debug('fetched manifest', this.manifest);
   }

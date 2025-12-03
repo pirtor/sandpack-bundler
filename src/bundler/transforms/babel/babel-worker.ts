@@ -30,8 +30,6 @@ async function getPresets(presets: any): Promise<PluginItem[]> {
       'env',
       {
         targets: '> 2.5%, not ie 11, not dead, not op_mini all',
-        useBuiltIns: 'usage',
-        corejs: '3.22',
         exclude: ['@babel/plugin-transform-regenerator'],
       },
     ],
